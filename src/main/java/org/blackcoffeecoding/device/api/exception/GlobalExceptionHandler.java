@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Ловим, если не нашли объект в БД (404)
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<StatusResponse> handleResourceNotFound(ResourceNotFoundException ex) {
         return ResponseEntity
@@ -20,7 +19,13 @@ public class GlobalExceptionHandler {
                 .body(new StatusResponse("error", ex.getMessage()));
     }
 
-    // Ловим ошибки валидации (например, пустой serialNumber) (400)
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<StatusResponse> handleResourceAlreadyExists(ResourceAlreadyExistsException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT) // 409 Conflict
+                .body(new StatusResponse("error", ex.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<StatusResponse> handleValidation(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult().getFieldErrors().stream()

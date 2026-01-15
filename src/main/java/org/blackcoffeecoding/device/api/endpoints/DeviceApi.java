@@ -27,26 +27,26 @@ public interface DeviceApi {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = StatusResponse.class)))
     })
     @GetMapping("/{id}")
-        // БЫЛО: DeviceResponse getDevice(...)
-        // СТАЛО: Добавили EntityModel<...>, чтобы совпадало с контроллером
     EntityModel<DeviceResponse> getDevice(@PathVariable("id") Long id);
+
+    @Operation(summary = "Получить все устройства (с пагинацией)")
+    @ApiResponse(responseCode = "200", description = "Список устройств получен")
+    @GetMapping
+    PagedModel<EntityModel<DeviceResponse>> getAllDevices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    );
 
     @Operation(summary = "Создать новое устройство")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Устройство успешно создано",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = DeviceResponse.class))),
             @ApiResponse(responseCode = "400", description = "Ошибка валидации данных",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StatusResponse.class))),
+            @ApiResponse(responseCode = "409", description = "Устройство с таким серийным номером уже существует",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = StatusResponse.class)))
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-        // Тут оставляем DeviceResponse, так как в контроллере ты пока не используешь ассемблер для создания
     DeviceResponse createDevice(@Valid @RequestBody DeviceRequest request);
-
-    @Operation(summary = "Получить все устройства (с пагинацией)")
-    @GetMapping
-    PagedModel<EntityModel<DeviceResponse>> getAllDevices(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    );
 }
