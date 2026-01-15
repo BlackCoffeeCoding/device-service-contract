@@ -27,7 +27,9 @@ public interface DeviceApi {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = StatusResponse.class)))
     })
     @GetMapping("/{id}")
-    DeviceResponse getDevice(@PathVariable("id") Long id);
+        // БЫЛО: DeviceResponse getDevice(...)
+        // СТАЛО: Добавили EntityModel<...>, чтобы совпадало с контроллером
+    EntityModel<DeviceResponse> getDevice(@PathVariable("id") Long id);
 
     @Operation(summary = "Создать новое устройство")
     @ApiResponses(value = {
@@ -38,6 +40,7 @@ public interface DeviceApi {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+        // Тут оставляем DeviceResponse, так как в контроллере ты пока не используешь ассемблер для создания
     DeviceResponse createDevice(@Valid @RequestBody DeviceRequest request);
 
     @Operation(summary = "Получить все устройства (с пагинацией)")
