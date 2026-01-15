@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import org.blackcoffeecoding.device.api.dto.DeviceRequest;
 import org.blackcoffeecoding.device.api.dto.DeviceResponse;
 import org.blackcoffeecoding.device.api.dto.StatusResponse;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,4 +39,11 @@ public interface DeviceApi {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     DeviceResponse createDevice(@Valid @RequestBody DeviceRequest request);
+
+    @Operation(summary = "Получить все устройства (с пагинацией)")
+    @GetMapping
+    PagedModel<EntityModel<DeviceResponse>> getAllDevices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    );
 }
