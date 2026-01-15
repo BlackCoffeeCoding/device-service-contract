@@ -48,5 +48,15 @@ public interface DeviceApi {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    DeviceResponse createDevice(@Valid @RequestBody DeviceRequest request);
+    EntityModel<DeviceResponse> createDevice(@Valid @RequestBody DeviceRequest request);
+
+    @Operation(summary = "Удалить устройство")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Устройство удалено"),
+            @ApiResponse(responseCode = "404", description = "Устройство не найдено",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StatusResponse.class)))
+    })
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT) // 204 No Content - стандарт для удаления
+    void deleteDevice(@PathVariable("id") Long id);
 }

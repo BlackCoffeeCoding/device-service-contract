@@ -12,6 +12,10 @@ public record DeviceRequest(
         @NotBlank(message = "Серийный номер обязателен")
         String serialNumber,
 
+        // Новое поле
+        @NotBlank(message = "Категория обязательна")
+        String category,
+
         @PastOrPresent(message = "Дата выпуска не может быть в будущем")
         LocalDate releaseDate,
 

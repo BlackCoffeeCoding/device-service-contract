@@ -48,5 +48,17 @@ public interface CompanyApi {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    CompanyResponse createCompany(@Valid @RequestBody CompanyRequest request);
+        // ИСПРАВЛЕНО: Возвращаем EntityModel
+    EntityModel<CompanyResponse> createCompany(@Valid @RequestBody CompanyRequest request);
+
+    // ДОБАВЛЕНО: Метод удаления
+    @Operation(summary = "Удалить компанию")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Компания удалена"),
+            @ApiResponse(responseCode = "404", description = "Компания не найдена",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = StatusResponse.class)))
+    })
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteCompany(@PathVariable("id") Long id);
 }

@@ -1,0 +1,58 @@
+type Company {
+    id: ID!
+    name: String
+    abbreviation: String
+}
+
+type Device {
+    id: ID!
+    name: String
+    serialNumber: String
+    releaseDate: String
+    category: String  # Новое поле (аналог Жанра)
+    company: Company
+}
+
+# Объект для пагинации
+type DevicePage {
+    content: [Device]
+    pageNumber: Int
+    pageSize: Int
+    totalElements: Int
+    totalPages: Int
+}
+
+type Query {
+    # Компании
+    companies: [Company]
+    companyById(id: ID!): Company
+
+    # Устройства (с фильтром по категории и пагинацией)
+    devices(categoryFilter: String, page: Int = 0, size: Int = 10): DevicePage
+    deviceById(id: ID!): Device
+}
+
+input CompanyInput {
+    name: String!
+    abbreviation: String!
+}
+
+input DeviceInput {
+    name: String!
+    serialNumber: String!
+    category: String!
+    companyId: ID!
+}
+
+type Mutation {
+    # Компании
+    createCompany(input: CompanyInput!): Company
+    deleteCompany(id: ID!): ID
+
+    # Устройства
+    createDevice(input: DeviceInput!): Device
+    deleteDevice(id: ID!): ID
+
+    # Спец. мутация для обновления категории (задание для сам. работы)
+    updateDeviceCategory(id: ID!, category: String!): Device
+}
